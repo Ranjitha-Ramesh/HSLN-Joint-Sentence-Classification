@@ -1,3 +1,8 @@
+"""
+Code-based modified based on bert optimizer
+Code-adapted from Google Tensorflow Github repo
+author - aam35
+"""
 """Functions and classes related to optimization (weight updates)."""
 
 from __future__ import absolute_import
