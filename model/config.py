@@ -17,13 +17,13 @@ class Config():
         ## parse args
         self.parser = parser
         # training parameters
-        parser.add_argument('--nepochs', default='40', type=int,
-                    help='number of epochs')
+        parser.add_argument('--nepochs', default='30', type=int,
+                    help='number of epochs')#ori default=40
         parser.add_argument('--dropout', default='0.5', type=float,
                     help='number of epochs')
-        parser.add_argument('--batch_size', default='40', type=int,
-                    help='batch size')
-        parser.add_argument('--lr', default='0.003', type=float,
+        parser.add_argument('--batch_size', default='20', type=int,
+                    help='batch size')#ori deafult = 40
+        parser.add_argument('--lr', default='0.03', type=float,
                     help='learning rate')
         parser.add_argument('--lr_method', default='adam', type=str,
                     help='optimization method')
@@ -45,16 +45,18 @@ class Config():
                     help='the name of dataset to use')
         parser.add_argument('--dir_output', default='test', type=str,
                     help='directory for output')
-        parser.add_argument('--filename_wordvec_trimmed', default='word2vec_pubmed.trimmed.txt', 
+        parser.add_argument('--filename_wordvec_trimmed', default='word2vec_pubmed.trimmed.txt',
                     type=str, help='directory for trimmed word embeddings file')
-        parser.add_argument('--filename_wordvec', default='word2vec/wikipedia-pubmed-and-PMC-w2v.txt', 
+        #parser.add_argument('--filename_wordvec', default='word2vec/wikipedia-pubmed-and-PMC-w2v.txt',
+        #           type=str, help='directory for original word embeddings file')
+        parser.add_argument('--filename_wordvec', default='/home/rxr5423/BERT/BERTGit/bert/vocab_words_SciBERT_fine.txt',
                     type=str, help='directory for original word embeddings file')
-
+        #parser.add_argument('--train_accuracy', default='store_true', help='whether report accuracy while training')
         # model hyperparameters
         parser.add_argument('--hidden_size_char', default='100', type=int,
                     help='hidden size of character level lstm')
         parser.add_argument('--hidden_size_lstm_sentence', default='200', type=int,
-                    help='hidden size of sentence level lstm')
+              help='hidden size of sentence level lstm')
         parser.add_argument('--hidden_size_lstm_document', default='200', type=int,
                     help='hidden size of document level lstm')
         parser.add_argument('--attention_size', default='200', type=int,
@@ -69,32 +71,32 @@ class Config():
                     help='cnn filter window sizes')
 
         # misc
-        parser.add_argument('--restore', action='store_true', 
-                    help='whether restore from previous trained model')
-        parser.add_argument('--use_crf', action='store_false', 
+        parser.add_argument('--restore', action='store_false',
+                   help='whether restore from previous trained model')#true
+        parser.add_argument('--use_crf', action='store_false',
                     help='whether use crf optimization layer')
-        parser.add_argument('--use_chars', action='store_true', 
+        parser.add_argument('--use_chars', action='store_true',
                     help='whether use character embeddings')
-        parser.add_argument('--use_document_level', action='store_false', 
+        parser.add_argument('--use_document_level', action='store_false',
                     help='whether use document level lstm layer')
-        parser.add_argument('--use_attention', action='store_false', 
+        parser.add_argument('--use_attention', action='store_false',
                     help='whether use attention based pooling')
-        parser.add_argument('--use_cnn', action='store_true', 
+        parser.add_argument('--use_cnn', action='store_true',
                     help='whether use cnn or lstm for sentence representation')
-        parser.add_argument('--train_embeddings', action='store_true', 
+        parser.add_argument('--train_embeddings', action='store_true',
                     help='whether use cnn or lstm for sentence representation')
-        parser.add_argument('--use_pretrained', action='store_false', 
+        parser.add_argument('--use_pretrained', action='store_false',
                     help='whether use cnn or lstm for sentence representation')
-        parser.add_argument('--train_accuracy', action='store_false', 
-                    help='whether report accuracy while training')
-        parser.add_argument('--use_cnn_rnn', action='store_true', 
+        parser.add_argument('--train_accuracy', action='store_true',
+                   help='whether report accuracy while training') #store_false
+        parser.add_argument('--use_cnn_rnn', action='store_true',
                     help='whether stack rnn layer over cnn for sentence classification')
-        parser.add_argument('--use_gru', action='store_true', 
+        parser.add_argument('--use_gru', action='store_true',
                     help='whether gru instead of lstm')
 
         self.parser.parse_args(namespace=self)
 
-        self.filename_wordvec = os.path.join('/DIR/OF/EMBEDDINGS', 
+        self.filename_wordvec = os.path.join('./DIROFEMBEDDINGS',
                                             self.filename_wordvec)
         self.dir_output = os.path.join('results', self.dir_output)
         self.dir_model  = os.path.join(self.dir_output, "model.weights")
@@ -111,7 +113,7 @@ class Config():
             self.filename_chars = "data/PubMed_20k_RCT/chars.txt"
             self.filename_wordvec_trimmed = os.path.join('data/PubMed_20k_RCT', self.filename_wordvec_trimmed)
         elif self.dataset_name == 'pubmed-200k':
-            self.filename_dev = "data/PubMed_200k_RCT/dev_clean.txt"
+           self.filename_dev = "data/PubMed_200k_RCT/dev_clean.txt"
             self.filename_test = "data/PubMed_200k_RCT/test_clean.txt"
             self.filename_train = "data/PubMed_200k_RCT/train_clean.txt"
             self.filename_words = "data/PubMed_200k_RCT/words.txt"
@@ -144,9 +146,7 @@ class Config():
         # load if requested (default)
         if load:
             self.load()
-
-
-    def load(self):
+   def load(self):
         """Loads vocabulary, processing functions and embeddings
 
         Supposes that build_data.py has been run successfully and that
@@ -175,5 +175,6 @@ class Config():
         self.dim_word = (self.embeddings.shape[1] if self.use_pretrained else 200)
 
     max_iter = None # if not None, max number of examples in Dataset
+
 
 
